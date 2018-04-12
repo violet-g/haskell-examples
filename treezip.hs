@@ -1,5 +1,6 @@
-data Tree a = Leaf | Node a (Tree a) (Tree a) deriving (Show, Eq)
+-- AE 1
 
+data Tree a = Leaf | Node a (Tree a) (Tree a) deriving (Show, Eq)
 
 treezip :: (Tree a) -> (Tree b) -> (Tree (a,b))
 -- This function takes two trees and combines elements at corresponding locations

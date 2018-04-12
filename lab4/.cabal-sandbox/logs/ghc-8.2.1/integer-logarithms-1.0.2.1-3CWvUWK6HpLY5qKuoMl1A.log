@@ -1,0 +1,6 @@
+Installing library in C:\Users\Gabriella\Desktop\haskell\lab4\.cabal-sandbox\x86_64-windows-ghc-8.2.1\integer-logarithms-1.0.2.1-3CWvUWK6HpLY5qKuoMl1A
+pat ( src\GHC\Integer\Logarithms\Compat.hs, dist\dist-sandbox-5f7f1e30\build\GHC\Integer\Logarithms\Compat.o )
+[2 of 4] Compiling Math.NumberTheory.Logarithms ( src\Math\NumberTheory\Logarithms.hs, dist\dist-sandbox-5f7f1e30\build\Math\NumberTheory\Logarithms.o )
+[3 of 4] Compiling Math.NumberTheory.Powers.Integer ( src\Math\NumberTheory\Powers\Integer.hs, dist\dist-sandbox-5f7f1e30\build\Math\NumberTheory\Powers\Integer.o )
+[4 of 4] Compiling Math.NumberTheory.Powers.Natural ( src\Math\NumberTheory\Powers\Natural.hs, dist\dist-sandbox-5f7f1e30\build\Math\NumberTheory\Powers\Natural.o )
+cabal: Leaving directory 'C:\Users\GABRIE~1\AppData\Local\Temp\cabal-tmp-4152\integer-logarithms-1.0.2.1'

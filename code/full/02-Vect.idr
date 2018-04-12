@@ -1,0 +1,93 @@
+module ListWithLength
+
+%default covering
+
+{- Intermezzo -}
+
+-- A way to think about numbers. Also called Naturals.
+data Peano = Zero | Next Peano
+
+%name Peano a, b
+
+One : Peano
+One = Next Zero
+
+Two : Peano
+Two = Next $ One
+
+Three : Peano
+Three = Next $ Next One
+
+-- We can even define operations on them.
+plus : (a : Peano)
+    -> (b : Peano)
+    -> Peano
+plus Zero b     = b
+plus (Next a) b = Next $ plus a b
+
+minus : (a : Peano)
+     -> (b : Peano)
+     -> Peano
+minus Zero b            = Zero
+minus a    Zero         = a
+minus (Next a) (Next b) = minus a b
+
+{- Lists with Length -}
+
+data Vect : (size : Peano)
+         -> (elemTy : Type)
+         -> Type
+  where
+    Empty : Vect Zero a
+    Cons : {a : Type}
+        -> {l : Peano}
+        -> (elem : a)
+        -> (rest : Vect l a)
+        -> Vect (Next l) a
+
+append : {a,b : Peano}
+      -> {elemTy : Type}
+      -> (xs : Vect a    elemTy)
+      -> (ys : Vect b    elemTy)
+      -> Vect (plus a b) elemTy
+append Empty ys            = ys
+append (Cons elem rest) ys = Cons elem (append rest ys)
+
+zip : (xs : Vect a elemTyA)
+   -> (ys : Vect a elemTyB)
+   -> Vect a (Pair elemTyA elemTyB)
+zip Empty            Empty      = Empty
+zip (Cons elem rest) (Cons x y) = Cons (elem, x) (zip rest y)
+
+{- Matrix Transposition -}
+
+testMatrix : Vect Three (Vect One Int)
+testMatrix = Cons (Cons 1 Empty)
+           $ Cons (Cons 2 Empty)
+           $ Cons (Cons 3 Empty)
+           $ Empty
+
+empties : {m : Peano} -> Vect m (Vect Zero elemTy)
+empties {m = Zero}     = Empty
+empties {m = (Next a)} = Cons Empty empties
+
+combine : (row : Vect m elemTy)
+       -> (rest' : Vect m (Vect l elemTy))
+       -> Vect m (Vect (Next l) elemTy)
+combine Empty Empty = Empty
+combine (Cons elem rest) (Cons x y) = Cons (Cons elem x) (combine rest y)
+
+transpose : Vect n (Vect m elemTy)
+         -> Vect m (Vect n elemTy)
+transpose Empty = empties
+transpose (Cons row rest) =
+  let rest' = transpose rest
+   in (combine row rest')
+
+{- Exercise: Write safe head and tail for Vect -}
+
+head : Vect (Next a) elemTy -> elemTy
+head (Cons elem rest) = elem
+
+tail : Vect (Next a) elemTy -> Vect a elemTy
+tail (Cons elem rest) = rest

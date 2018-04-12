@@ -1,0 +1,132 @@
+module ProofsAndPredicates
+
+%default total
+
+%hide List
+
+{- Reminder of lists -}
+data List : (elemTy : Type) -> Type where
+  Empty : List elemTy
+  Cons  : (x : elemTy) -> (rest : List elemTy) -> List elemTy
+
+{- Q: Can we write a 'safe' head for list? -}
+
+unSafeHead : List a -> a
+unSafeHead Empty = ?unSafeHead_rhs_1
+unSafeHead (Cons elem rest) = elem
+
+{- Q: What does it mean for `head` to be 'safe'?
+
+On blackboard:
+
+```haskell
+||| @param xs
+||| @returns the first element of the list
+||| @pre xs Is nonEmpty
+||| @post The result *is* the first element of the list.
+head :: List a -> a
+```
+-}
+
+{- How to provide evidence that the given list is non-empty? -}
+
+hasElements : List a -> Bool
+hasElements Empty      = False
+hasElements (Cons _ _) = True
+
+{- How to use this function at the type-level? -}
+
+{- Predicates -}
+
+{- Simple Equality predicate. -}
+
+data Equal : (a : ty) -> (b : ty) -> Type where
+   AreEqual : Equal a a
+
+-- A 'safe' version of head for `List`.
+safeHead' : (xs  : List a)
+     -> (prf : Equal (hasElements xs) True)
+     -> a
+safeHead' Empty AreEqual impossible
+safeHead' (Cons x rest) AreEqual = x
+
+{- This is cumbersome, better to provide a custom predicate to capture that a list has elements. -}
+
+data ListHasElements : (xs : List a) -> Type
+  where
+    HasElements : ListHasElements (Cons x rest)
+
+example0 : ListHasElements (Cons 1 Empty)
+example0 = HasElements
+
+head'' : (xs : List a)
+      -> (prf : ListHasElements xs)
+      -> a
+head'' (Cons x rest) HasElements = x
+
+{- Q: How to provide evidence that the returned element is in the list? -}
+
+data ElementOf : (value : elemTy)
+              -> (list  : List elemTy)
+              -> Type
+  where
+    Here : ElementOf value (Cons value rest)
+    There : (there : ElementOf value rest)
+         -> ElementOf value (Cons not_value rest)
+
+{- Example -}
+
+exampe1 : ElementOf 1 (Cons 1 (Cons 2 (Cons 3 Empty)))
+exampe1 = Here
+
+exampe2 : ElementOf 3 (Cons 1 (Cons 2 (Cons 3 Empty)))
+exampe2 = There (There Here)
+
+{- Can also use this predicate to perform safe operations on lists.
+   We can demonstrate dependent pattern matching here.
+-}
+
+remove : (value : ty)
+      -> (list  : List ty)
+      -> (prf   : ElementOf value list)
+      -> List ty
+remove value list prf with (prf)
+  remove value (Cons value rest) prf | Here = rest
+  remove value (Cons not_value rest) prf | (There there) = Cons not_value $ remove value rest there
+
+{- Q: How do we describe that an element *is* the head of the list? -}
+
+data ElementIsHead : (value : elemTy)
+                  -> (list  : List elemTy)
+                  -> Type
+  where
+    IsHead : ElementIsHead value (Cons value rest)
+
+example3 : ElementIsHead 1 (Cons 1 Empty)
+example3 = IsHead
+
+{- Q: How to provide evidence a value satisfies a given predicate? -}
+
+{- Dependent Pairs -}
+
+data Proof : (valTy  : Type)
+          -> (predTy : valTy -> Type )
+          -> Type
+  where
+    MkProof : {Predicate : ty -> Type}
+           -> (value : ty)
+           -> (suchThat : Predicate value)
+           -> Proof ty Predicate
+
+example4 : Proof (List Int) (\xs => ListHasElements xs)
+example4 = MkProof (Cons 1 $ Cons 2 $ Cons 3 Empty) HasElements
+
+example5 : Proof (Int, List Int) (\(x,xs) => ElementOf x xs)
+example5 = MkProof (2, Cons 1 $ Cons 2 Empty) (There Here)
+
+{- Q: How to build a 'safe' version of head -}
+
+head : (xs : List a)
+    -> (prfNonEmpty : ListHasElements xs)
+    -> Proof a (\value => ElementIsHead value xs)
+head (Cons x rest) HasElements = MkProof x IsHead

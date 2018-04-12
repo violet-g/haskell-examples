@@ -1,0 +1,7 @@
+Installing library in C:\Users\Gabriella\Desktop\haskell\lab4\.cabal-sandbox\x86_64-windows-ghc-8.2.1\distributive-0.5.3-Ay1muX0M8NVJVtde7MTqUR
+butive.hs, dist\dist-sandbox-5f7f1e30\build\Data\Distributive.o )
+[2 of 2] Compiling Data.Distributive.Generic ( src\Data\Distributive\Generic.hs, dist\dist-sandbox-5f7f1e30\build\Data\Distributive\Generic.o )
+p\Main.o )
+Linking C:\Users\GABRIE~1\AppData\Local\Temp\cabal-tmp-11006\distributive-0.5.3\dist/dist-sandbox-5f7f1e30\setup\setup.exe ...
+Configuring distributive-0.5.3...
+cabal: Leaving directory 'C:\Users\GABRIE~1\AppData\Local\Temp\cabal-tmp-11006\distributive-0.5.3'

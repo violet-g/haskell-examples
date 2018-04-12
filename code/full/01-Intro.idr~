@@ -1,0 +1,62 @@
+module Introduction
+
+%hide List
+
+{- We've seen primitive types -}
+
+answer : Int
+answer = 42
+
+hworld : String
+hworld = "Hello World"
+
+{- We've seen algebraic types -}
+
+data Pair   a b = MkPair a b
+data Maybe  a   = Nothing | Just a
+data Either e a = Left e  | Right a
+
+data List a = Empty | Cons a (List a)
+
+{- Types are not perfect -}
+
+head : List a -> a
+head (Cons x xs) = x
+
+tail : List a -> List a
+tail (Cons x xs) = xs
+
+append : List a -> List a -> List a
+append Empty ys = ys
+append (Cons x xs) ys = Cons x $ append xs xs
+
+map : (func : a -> b)
+   -> (xs : List a)
+   -> List b
+map func Empty = Empty
+map func (Cons x y) = (Cons (func x) Empty)
+
+{- Dependent Types -}
+
+-- Types are first class and can be computed
+StringList : Type
+StringList = List String
+
+IntList : Type
+IntList = List Int
+
+ListOf : Type -> Type
+ListOf ty = List ty
+
+-- Types can also depend on values
+
+ListOfStringOrInt : (isString : Bool) -> Type
+ListOfStringOrInt False = IntList
+ListOfStringOrInt True = StringList
+
+combine : (isString : Bool)
+       -> (xs : ListOfStringOrInt isString)
+       -> (ys : ListOfStringOrInt isString)
+       -> ListOfStringOrInt isString
+combine False xs ys = append xs ys
+combine True xs ys = append xs ys

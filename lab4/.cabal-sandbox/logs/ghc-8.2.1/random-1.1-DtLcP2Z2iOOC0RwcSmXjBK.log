@@ -1,0 +1,10 @@
+Installing library in C:\Users\Gabriella\Desktop\haskell\lab4\.cabal-sandbox\x86_64-windows-ghc-8.2.1\random-1.1-DtLcP2Z2iOOC0RwcSmXjBK
+ist-sandbox-5f7f1e30\build\System\Random.o )
+
+System\Random.hs:43:1: warning: [-Wtabs]
+    Tab character found here, and in 74 further locations.
+    Please use spaces instead.
+   |
+43 |         (
+   | ^^^^^^^^
+cabal: Leaving directory 'C:\Users\GABRIE~1\AppData\Local\Temp\cabal-tmp-11005\random-1.1'
